@@ -30,13 +30,18 @@ function App() {
       .then((response) => {
         return response.json();
       })
-      .then((data) => {
-        console.log("tests", data);
+      .then((response) => {
+        const data = response.data;
 
-        // const modifiedDataArray = data.map((day) => {
-        //   return { x: new Date(day.datum), y: day["testy-den"] };
-        // });
-        // setNewTestsPerDay([...modifiedDataArray]);
+        const modifiedDataArray = data.map((day) => {
+          const dateArr = day.datum.split(".");
+          const date = new Date(`${dateArr[2]}/${dateArr[1]}/${dateArr[0]}`);
+          return {
+            x: new Date(date),
+            y: day["testy-den"] / 5,
+          };
+        });
+        setNewTestsPerDay([...modifiedDataArray]);
       });
   }, []);
 
@@ -57,7 +62,7 @@ function App() {
           <XAxis title="X Axis" />
           <YAxis title="Y Axis" />
           <LineSeries data={newCasesPerDay} />
-          {/* <LineSeries data={newTestsPerDay} /> */}
+          <LineSeries data={newTestsPerDay} />
         </XYPlot>
         <XYPlot xType="time" height={300} width={1000}>
           <HorizontalGridLines />
